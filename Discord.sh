@@ -23,3 +23,19 @@ DM_ID=$(curl -H "Authorization: Bot $bot_token" -H "Content-Type: application/js
 
 curl -H "Authorization: Bot $bot_token" -H "Content-Type: application/json" \
 -X POST -d "{\"content\":\"$message\"}" "https://discord.com/api/v9/channels/$DM_ID/messages"
+
+# For Send Message And File in Channel With Webhook  --> Edit Channel --> Integrations --> Webhooks --> New Webhook --> Copy Webhook URL
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/home/zakzaki/Desktop/images.png" \
+-F "content=$message" $webhook_url
+
+# For Send Message And File in Channel With Your Bot
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/home/zakzaki/Desktop/images.png" \
+-F "content=$message" -H "Authorization: Bot $bot_token" "https://discord.com/api/v9/channels/$channel_id/messages"
+
+# For Send Direct Message And File To Other Users With Your Bot
+DM_ID=$(curl -H "Authorization: Bot $bot_token" -H "Content-Type: application/json" \
+-X POST -d "{\"recipient_id\": \"$user_id\"}" \
+"https://discord.com/api/v9/users/@me/channels" | sed -n 's/.*"id":"\([^"]*\)".*"type":1.*/\1/p')
+
+curl -X POST -H "Content-Type: multipart/form-data" -F "file=@/home/zakzaki/Desktop/images.png" \
+-F "content=$message" -H "Authorization: Bot $bot_token" "https://discord.com/api/v9/channels/$DM_ID/messages"
